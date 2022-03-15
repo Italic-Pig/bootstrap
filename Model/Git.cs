@@ -57,6 +57,11 @@ namespace ItalicPig.Bootstrap.Model
             }
         }
 
+        public static Task<CommandResult> ShowVersionAsync(Action<string>? outputCallback = null)
+        {
+            return RunCommandAsync(Environment.CurrentDirectory, "version", outputCallback);
+        }
+
         public static Task<CommandResult> EnableSparseCheckoutAsync(string repositoryPath, IEnumerable<string> sparseCheckoutPaths, Action<string>? outputCallback = null)
         {
             return RunCommandAsync(repositoryPath, $"sparse-checkout set {string.Join(" ", sparseCheckoutPaths)} --cone", outputCallback);
