@@ -1,0 +1,13 @@
+# Intermediate files
+[Bb]in/
+[Oo]bj/
+
+# Visual Studio local files
+.vs/
+*.user
+*.suo
+
+# OS
+desktop.ini
+Thumbs.db
+.DS_Store

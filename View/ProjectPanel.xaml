@@ -1,0 +1,75 @@
+﻿<UserControl x:Class="ItalicPig.Bootstrap.View.ProjectPanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:v="clr-namespace:ItalicPig.Bootstrap.View"
+             xmlns:vm="clr-namespace:ItalicPig.Bootstrap.ViewModel"
+             mc:Ignorable="d" 
+             d:DataContext="{x:Static vm:DesignTimeData.Project}"
+             d:Background="White"
+             d:DesignWidth="480" d:DesignHeight="450">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibility" />
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- Project path -->
+        <TextBlock Grid.Row="0" Grid.Column="0" Margin="0,0,20,0" Text="Project:" />
+        <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal">
+            <TextBox Text="{Binding Path, Mode=OneWay}" IsReadOnly="True" BorderThickness="0" VerticalAlignment="Center" />
+            <Button Margin="5,0,0,0" Padding="5,0" Command="{Binding ExploreToCommand}">
+                <Image Source="/Icons/Explorer.png" Height="16" />
+            </Button>
+        </StackPanel>
+
+        <!-- Sparse checkout -->
+        <TextBlock Grid.Row="1" Grid.Column="0" Margin="0,8,20,0" VerticalAlignment="Top" Text="Sparse checkout:" />
+        <StackPanel Grid.Row="1" Grid.Column="1" Margin="0,8,0,0" Orientation="Vertical">
+            <!-- Busy spinner -->
+            <Image Source="/Icons/Spinner.png" Width="64" Height="64" HorizontalAlignment="Left" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5" Visibility="{Binding IsBusy, Converter={StaticResource BooleanToVisibility}}">
+                <Image.RenderTransform>
+                    <RotateTransform x:Name="noFreeze" />
+                </Image.RenderTransform>
+                <Image.Triggers>
+                    <EventTrigger RoutedEvent="Loaded">
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation
+                        Storyboard.TargetProperty="(Image.RenderTransform).(RotateTransform.Angle)"
+                        To="360" Duration="0:0:1" RepeatBehavior="Forever" />
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                </Image.Triggers>
+            </Image>
+            <!-- Sparse checkout views -->
+            <ItemsControl Margin="0,0,0,5" ItemsSource="{Binding Views}" Visibility="{Binding ShowSparseCheckoutOn, Converter={StaticResource BooleanToVisibility}}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <CheckBox Content="{Binding Name}" IsChecked="{Binding IsActive}" ToolTip="{Binding Tooltip}" />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            <!-- Sparse checkout buttons -->
+            <StackPanel HorizontalAlignment="Left" Orientation="Horizontal">
+                <Button Margin="0,0,10,0" Padding="5,2" Content="Apply" Command="{Binding ApplyCommand}" Visibility="{Binding ShowSparseCheckoutOn, Converter={StaticResource BooleanToVisibility}}" />
+                <Button Padding="5,2" Content="Disable Sparse Checkout" Command="{Binding DisableSparseCheckoutCommand}" Visibility="{Binding ShowSparseCheckoutOn, Converter={StaticResource BooleanToVisibility}}" />
+                <Button Padding="5,2" Content="Enable Sparse Checkout" Command="{Binding EnableSparseCheckoutCommand}" Visibility="{Binding ShowSparseCheckoutOff, Converter={StaticResource BooleanToVisibility}}" />
+            </StackPanel>
+        </StackPanel>
+
+        <!-- Log -->
+        <TextBox Grid.Row="3" Grid.ColumnSpan="2" Margin="0,10,0,0" IsReadOnly="True" IsReadOnlyCaretVisible="True" Text="{Binding Log, Mode=OneWay}" />
+    </Grid>
+</UserControl>
