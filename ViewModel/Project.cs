@@ -148,6 +148,7 @@ namespace ItalicPig.Bootstrap.ViewModel
         private async Task ApplyAsync()
         {
             IsBusy = true;
+            await Model.Git.ShowVersionAsync(AddLogOutput);
             await _Project.ApplyAsync(AddLogOutput);
             foreach (var View in Views)
             {
