@@ -42,7 +42,13 @@ namespace ItalicPig.Bootstrap.Model
             Path = projectPath;
             _Config = BootstrapConfig.Read(Path);
             _SparseCheckoutEnabled = Git.ReadSparseCheckoutConfig(Path);
+
+            // Get Git's sparse checkout paths without all the ! and * paths (just the fully included paths)
             SparseCheckoutPaths.AddRange(Git.ReadSparseCheckoutPaths(Path));
+            var ActivePaths = SparseCheckoutPaths
+                .Where(p => !p.Contains('*') && !p.Contains('!') && IsPathIncludedInSparseCheckout(p))
+                .ToList();
+            SparseCheckoutPaths.ResetRange(ActivePaths);
         }
 
         public bool IsViewActive(string viewName)
