@@ -63,6 +63,7 @@ namespace ItalicPig.Bootstrap.ViewModel
         public ICommand EnableSparseCheckoutCommand { get; }
         public ICommand DisableSparseCheckoutCommand { get; }
         public ICommand ApplyCommand { get; }
+        public ICommand CopyLogCommand { get; }
         public ICommand ClearLogCommand { get; }
 
         public Project(string projectPath)
@@ -74,7 +75,8 @@ namespace ItalicPig.Bootstrap.ViewModel
             EnableSparseCheckoutCommand = new RelayCommand(EnableSparseCheckout, () => ShowSparseCheckoutOff);
             DisableSparseCheckoutCommand = new RelayCommand(DisableSparseCheckout, () => ShowSparseCheckoutOn);
             ApplyCommand = new RelayCommand(Apply, CanApply);
-            ClearLogCommand = new RelayCommand(() => Log = "");
+            CopyLogCommand = new RelayCommand(() => Clipboard.SetText(Log), () => Log != "");
+            ClearLogCommand = new RelayCommand(ClearLog, () => Log != "");
         }
 
         #region Private
@@ -165,7 +167,22 @@ namespace ItalicPig.Bootstrap.ViewModel
             IsBusy = false;
         }
 
-        private void AddLogOutput(string output) => Application.Current.Dispatcher.Invoke(() => Log += output + '\n');
+        private void AddLogOutput(string output)
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+                {
+                    Log += output + '\n';
+                    ((RelayCommand)CopyLogCommand).NotifyCanExecuteChanged();
+                    ((RelayCommand)ClearLogCommand).NotifyCanExecuteChanged();
+                });
+        }
+
+        private void ClearLog()
+        {
+            Log = "";
+            ((RelayCommand)CopyLogCommand).NotifyCanExecuteChanged();
+            ((RelayCommand)ClearLogCommand).NotifyCanExecuteChanged();
+        }
 
         private readonly DirectoryInfo _ProjectPath;
         private Model.Project _Project;
