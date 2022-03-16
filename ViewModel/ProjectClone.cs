@@ -107,6 +107,7 @@ namespace ItalicPig.Bootstrap.ViewModel
                 var NewProject = new Project(FullPath);
                 _ProjectCollection.Projects.Add(NewProject);
                 _ProjectCollection.SelectedProject = NewProject;
+                _ProjectCollection.Save();
                 NewProject.Clone(_Url);
                 cloneWindow?.Close();
             }

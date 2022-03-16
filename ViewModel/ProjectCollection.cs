@@ -39,14 +39,37 @@ namespace ItalicPig.Bootstrap.ViewModel
             RefreshCommand = new RelayCommand(Refresh, CanRefresh);
         }
 
+        public void Save() => SaveSourceTreeTabs(Projects.Select(p => p.Path).ToArray());
+
         #region Private
+        private static string SourceTreeTabsPath => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Atlassian", "SourceTree", "opentabs.xml");
+
         private static string[] LoadSourceTreeTabs()
         {
-            var OpenTabsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Atlassian", "SourceTree", "opentabs.xml");
             var Serializer = new XmlSerializer(typeof(string[]));
-            using var Reader = new StreamReader(OpenTabsPath);
-            var Tabs = (string[]?)Serializer.Deserialize(Reader);
-            return Tabs ?? Array.Empty<string>();
+            try
+            {
+                using var Reader = new StreamReader(SourceTreeTabsPath);
+                var Tabs = (string[]?)Serializer.Deserialize(Reader);
+                return Tabs ?? Array.Empty<string>();
+            }
+            catch (IOException)
+            {
+                return Array.Empty<string>();
+            }
+        }
+
+        private static void SaveSourceTreeTabs(string[] tabs)
+        {
+            var Serializer = new XmlSerializer(typeof(string[]));
+            try
+            {
+                using var Writer = new StreamWriter(SourceTreeTabsPath);
+                var XmlSettings = new System.Xml.XmlWriterSettings() { Indent = true };
+                using var XmlWriter = System.Xml.XmlWriter.Create(Writer, XmlSettings);
+                Serializer.Serialize(XmlWriter, tabs);
+            }
+            catch (IOException) { }
         }
 
         private bool CanRefresh() => Projects.All(p => p.IsIdle);
