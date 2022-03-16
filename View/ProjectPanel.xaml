@@ -34,7 +34,7 @@
         </StackPanel>
 
         <!-- Sparse checkout -->
-        <TextBlock Grid.Row="1" Grid.Column="0" Margin="0,8,20,0" VerticalAlignment="Top" Text="Sparse checkout:" />
+        <TextBlock Grid.Row="1" Grid.Column="0" Margin="0,8,20,0" VerticalAlignment="Top" Text="Views:" />
         <StackPanel Grid.Row="1" Grid.Column="1" Margin="0,8,0,0" Orientation="Vertical">
             <!-- Busy spinner -->
             <Image Source="/Icons/Spinner.png" Width="64" Height="64" HorizontalAlignment="Left" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5" Visibility="{Binding IsBusy, Converter={StaticResource BooleanToVisibility}}">
@@ -45,9 +45,7 @@
                     <EventTrigger RoutedEvent="Loaded">
                         <BeginStoryboard>
                             <Storyboard>
-                                <DoubleAnimation
-                        Storyboard.TargetProperty="(Image.RenderTransform).(RotateTransform.Angle)"
-                        To="360" Duration="0:0:1" RepeatBehavior="Forever" />
+                                <DoubleAnimation Storyboard.TargetProperty="(Image.RenderTransform).(RotateTransform.Angle)" To="360" Duration="0:0:1" RepeatBehavior="Forever" />
                             </Storyboard>
                         </BeginStoryboard>
                     </EventTrigger>

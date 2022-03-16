@@ -12,6 +12,7 @@ namespace ItalicPig.Bootstrap.ViewModel
     public class ProjectCollection : ObservableObject
     {
         public ObservableCollection<Project> Projects { get; } = new ObservableCollection<Project>();
+        public bool ShowProjects => Projects.Count > 0;
 
         public Project? SelectedProject
         {
@@ -55,7 +56,15 @@ namespace ItalicPig.Bootstrap.ViewModel
         private void Refresh(IEnumerable<string> projectPaths)
         {
             var LastSelectedProject = Properties.Settings.Default.SelectedProject;
+            var OldProjectCount = Projects.Count;
+
             Projects.ResetRange(projectPaths.Select(path => new Project(path)));
+
+            if (Projects.Count != OldProjectCount)
+            {
+                OnPropertyChanged(nameof(ShowProjects));
+            }
+
             SelectedProject = Projects.FirstOrDefault(p => p.Path == LastSelectedProject);
             if (SelectedProject == null)
             {

@@ -11,8 +11,10 @@
         <vm:ProjectCollection />
     </Window.DataContext>
 
-    <!-- Modified tab control style to leave space for the clone/refresh buttons -->
     <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibility" />
+
+        <!-- Modified tab control style to leave space for the clone/refresh buttons -->
         <SolidColorBrush x:Key="TabItem.Selected.Background" Color="#FFFFFF"/>
         <SolidColorBrush x:Key="TabItem.Selected.Border" Color="#ACACAC"/>
         <Style x:Key="MainTabs" TargetType="{x:Type TabControl}">
@@ -90,8 +92,17 @@
             <ColumnDefinition Width="70" />
         </Grid.ColumnDefinitions>
 
+        <!-- Info if you have no projects yet -->
+        <TextBlock Grid.RowSpan="2" Grid.ColumnSpan="2"
+                   Text="You don't have any projects yet. Install SourceTree if you haven't already, then use the Clone button above to bootstrap a new project."
+                   TextWrapping="Wrap" MaxWidth="300" HorizontalAlignment="Center" VerticalAlignment="Center" />
+
         <!-- Main tabs -->
-        <TabControl Grid.RowSpan="2" Grid.ColumnSpan="2" Style="{DynamicResource MainTabs}" ItemsSource="{Binding Projects}" SelectedItem="{Binding SelectedProject}">
+        <TabControl Grid.RowSpan="2" Grid.ColumnSpan="2"
+                    Style="{DynamicResource MainTabs}"
+                    ItemsSource="{Binding Projects}"
+                    SelectedItem="{Binding SelectedProject}"
+                    Visibility="{Binding ShowProjects, Converter={StaticResource BooleanToVisibility}}">
             <TabControl.ItemTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding Name}"/>
@@ -106,10 +117,10 @@
 
         <!-- Clone and refresh -->
         <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center">
-            <Button Width="22" Height="22" Margin="0,0,10,0" BorderThickness="0" BorderBrush="Transparent" Background="Transparent">
+            <Button Width="22" Height="22" Margin="0,0,10,0" BorderThickness="0" BorderBrush="Transparent" Background="Transparent" ToolTip="Clone">
                 <Image Source="/Icons/Add.png" />
             </Button>
-            <Button Width="22" Height="22" BorderThickness="0" BorderBrush="Transparent" Background="Transparent" Command="{Binding RefreshCommand}">
+            <Button Width="22" Height="22" BorderThickness="0" BorderBrush="Transparent" Background="Transparent" ToolTip="Refresh" Command="{Binding RefreshCommand}">
                 <Image Source="/Icons/Refresh.png" />
             </Button>
         </StackPanel>
