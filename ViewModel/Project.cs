@@ -1,4 +1,5 @@
-﻿using System.Collections.Specialized;
+﻿using System;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -148,11 +149,18 @@ namespace ItalicPig.Bootstrap.ViewModel
         private async Task ApplyAsync()
         {
             IsBusy = true;
-            await Model.Git.ShowVersionAsync(AddLogOutput);
-            await _Project.ApplyAsync(AddLogOutput);
-            foreach (var View in Views)
+            try
             {
-                View.Dirty = false;
+                await Model.Git.ShowVersionAsync(AddLogOutput);
+                var Result = await _Project.ApplyAsync(AddLogOutput);
+                foreach (var View in Views)
+                {
+                    View.Dirty = false;
+                }
+            }
+            catch (Exception Ex)
+            {
+                AddLogOutput($"{Ex.GetType().Name}: {Ex.Message}");
             }
             IsBusy = false;
         }

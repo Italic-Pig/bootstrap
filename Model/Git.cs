@@ -77,7 +77,7 @@ namespace ItalicPig.Bootstrap.Model
             return Cli.Wrap(FindGitExecutable())
                 .WithArguments(arguments)
                 .WithWorkingDirectory(repositoryPath)
-                .WithValidation(CommandResultValidation.None)
+                .WithValidation(CommandResultValidation.ZeroExitCode)
                 .WithStandardOutputPipe((outputCallback == null) ? PipeTarget.Null : PipeTarget.ToDelegate(outputCallback))
                 .WithStandardErrorPipe((outputCallback == null) ? PipeTarget.Null : PipeTarget.ToDelegate(outputCallback))
                 .ExecuteAsync();
