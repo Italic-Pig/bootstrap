@@ -1,0 +1,42 @@
+﻿<Window x:Class="ItalicPig.Bootstrap.View.CloneDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:v="clr-namespace:ItalicPig.Bootstrap.View"
+        xmlns:vm="clr-namespace:ItalicPig.Bootstrap.ViewModel"
+        x:Name="CloneWindow"
+        d:DataContext="{d:DesignInstance Type=vm:ProjectClone}"
+        mc:Ignorable="d"
+        Title="Clone Project" Width="400" SizeToContent="Height" ResizeMode="NoResize" WindowStartupLocation="CenterOwner">
+    <Grid Margin="10,0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="10" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <!-- URL -->
+        <TextBlock Grid.Row="0" VerticalAlignment="Center" Text="URL:" />
+        <TextBox Grid.Row="0" Grid.Column="2" Margin="0,10" Text="{Binding Url, UpdateSourceTrigger=PropertyChanged}" />
+
+        <!-- Folder -->
+        <TextBlock Grid.Row="1" VerticalAlignment="Center" Text="Folder:" />
+        <StackPanel Grid.Row="1" Grid.Column="2" Margin="0,10" Orientation="Horizontal">
+            <TextBox MinWidth="100" VerticalAlignment="Center" Text="{Binding Folder, UpdateSourceTrigger=PropertyChanged}" />
+            <TextBlock Margin="2,0" VerticalAlignment="Center" Text="{Binding PathSeparator}" />
+            <TextBlock VerticalAlignment="Center" Text="{Binding ProjectName}" />
+        </StackPanel>
+        
+        <!-- Buttons -->
+        <StackPanel Grid.Row="2" Grid.ColumnSpan="3" Margin="0,10" Orientation="Horizontal" HorizontalAlignment="Center">
+            <Button Padding="5,2" Content="Clone" Command="{Binding CloneCommand}" CommandParameter="{Binding ElementName=CloneWindow}" />
+            <Button Margin="10,0,0,0" Padding="5,2" Content="Cancel" Click="CancelButton_Click" />
+        </StackPanel>
+    </Grid>
+</Window>

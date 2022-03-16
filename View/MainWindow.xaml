@@ -117,7 +117,7 @@
 
         <!-- Clone and refresh -->
         <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center">
-            <Button Width="22" Height="22" Margin="0,0,10,0" BorderThickness="0" BorderBrush="Transparent" Background="Transparent" ToolTip="Clone">
+            <Button Width="22" Height="22" Margin="0,0,10,0" BorderThickness="0" BorderBrush="Transparent" Background="Transparent" ToolTip="Clone" Click="CloneButton_Click">
                 <Image Source="/Icons/Add.png" />
             </Button>
             <Button Width="22" Height="22" BorderThickness="0" BorderBrush="Transparent" Background="Transparent" ToolTip="Refresh" Command="{Binding RefreshCommand}">

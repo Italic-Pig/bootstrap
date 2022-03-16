@@ -67,6 +67,11 @@ namespace ItalicPig.Bootstrap.Model
             SparseCheckoutPaths.ResetRange(AllActivePaths);
         }
 
+        public Task<CliWrap.CommandResult> CloneAsync(string url, Action<string>? outputCallback = null)
+        {
+            return Git.CloneAsync(Path, url, outputCallback);
+        }
+
         public Task<CliWrap.CommandResult> ApplyAsync(Action<string>? outputCallback = null)
         {
             if (_SparseCheckoutEnabled)

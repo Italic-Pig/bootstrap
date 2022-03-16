@@ -79,6 +79,8 @@ namespace ItalicPig.Bootstrap.ViewModel
             ClearLogCommand = new RelayCommand(ClearLog, () => Log != "");
         }
 
+        public void Clone(string url) => Task.Run(() => CloneAsync(url));
+
         #region Private
         [MemberNotNull(nameof(_Project))]
         private void Refresh()
@@ -128,6 +130,22 @@ namespace ItalicPig.Bootstrap.ViewModel
             Process.Start("explorer.exe", Path);
         }
 
+        private async Task CloneAsync(string url)
+        {
+            Application.Current.Dispatcher.Invoke(() => IsBusy = true);
+            try
+            {
+                await Model.Git.ShowVersionAsync(AddLogOutput);
+                var Result = await _Project.CloneAsync(url, AddLogOutput);
+                Application.Current.Dispatcher.Invoke(Refresh);
+            }
+            catch (Exception Ex)
+            {
+                AddLogOutput($"{Ex.GetType().Name}: {Ex.Message}");
+            }
+            Application.Current.Dispatcher.Invoke(() => IsBusy = false);
+        }
+
         private async void EnableSparseCheckout()
         {
             _Project.SparseCheckoutEnabled = true;
@@ -150,7 +168,7 @@ namespace ItalicPig.Bootstrap.ViewModel
 
         private async Task ApplyAsync()
         {
-            IsBusy = true;
+            Application.Current.Dispatcher.Invoke(() => IsBusy = true);
             try
             {
                 await Model.Git.ShowVersionAsync(AddLogOutput);
@@ -164,7 +182,7 @@ namespace ItalicPig.Bootstrap.ViewModel
             {
                 AddLogOutput($"{Ex.GetType().Name}: {Ex.Message}");
             }
-            IsBusy = false;
+            Application.Current.Dispatcher.Invoke(() => IsBusy = false);
         }
 
         private void AddLogOutput(string output)

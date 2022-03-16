@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Windows;
+using ItalicPig.Bootstrap.ViewModel;
 
 namespace ItalicPig.Bootstrap.View
 {
@@ -32,6 +33,16 @@ namespace ItalicPig.Bootstrap.View
         private void RestorePlacement()
         {
             WindowPlacement.SetPlacement(this, Properties.Settings.Default.WindowPlacement);
+        }
+
+        private void CloneButton_Click(object sender, RoutedEventArgs e)
+        {
+            var Dialog = new CloneDialog
+            {
+                Owner = this,
+                DataContext = new ProjectClone((ProjectCollection)DataContext)
+            };
+            Dialog.ShowDialog();
         }
     }
 }

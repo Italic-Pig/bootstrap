@@ -62,6 +62,13 @@ namespace ItalicPig.Bootstrap.Model
             return RunCommandAsync(Environment.CurrentDirectory, "version", outputCallback);
         }
 
+        public static Task<CommandResult> CloneAsync(string repositoryPath, string url, Action<string>? outputCallback = null)
+        {
+            var ParentPath = Path.GetDirectoryName(repositoryPath) ?? "";
+            var RepositoryName = Path.GetFileName(repositoryPath);
+            return RunCommandAsync(ParentPath, $"clone --filter=blob:none --sparse {url} {RepositoryName}", outputCallback);
+        }
+
         public static Task<CommandResult> EnableSparseCheckoutAsync(string repositoryPath, IEnumerable<string> sparseCheckoutPaths, Action<string>? outputCallback = null)
         {
             return RunCommandAsync(repositoryPath, $"sparse-checkout set {string.Join(" ", sparseCheckoutPaths)} --cone", outputCallback);
@@ -72,11 +79,11 @@ namespace ItalicPig.Bootstrap.Model
             return RunCommandAsync(repositoryPath, "sparse-checkout disable", outputCallback);
         }
 
-        private static Task<CommandResult> RunCommandAsync(string repositoryPath, string arguments, Action<string>? outputCallback)
+        private static Task<CommandResult> RunCommandAsync(string workingDirectory, string arguments, Action<string>? outputCallback)
         {
             return Cli.Wrap(FindGitExecutable())
                 .WithArguments(arguments)
-                .WithWorkingDirectory(repositoryPath)
+                .WithWorkingDirectory(workingDirectory)
                 .WithValidation(CommandResultValidation.ZeroExitCode)
                 .WithStandardOutputPipe((outputCallback == null) ? PipeTarget.Null : PipeTarget.ToDelegate(outputCallback))
                 .WithStandardErrorPipe((outputCallback == null) ? PipeTarget.Null : PipeTarget.ToDelegate(outputCallback))
