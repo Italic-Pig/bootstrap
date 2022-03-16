@@ -69,6 +69,11 @@ namespace ItalicPig.Bootstrap.Model
             return RunCommandAsync(ParentPath, $"clone --filter=blob:none --sparse {url} {RepositoryName}", outputCallback);
         }
 
+        public static Task<CommandResult> InstallLfsAsync(string repositoryPath, Action<string>? outputCallback = null)
+        {
+            return RunCommandAsync(repositoryPath, "lfs install", outputCallback);
+        }
+
         public static Task<CommandResult> EnableSparseCheckoutAsync(string repositoryPath, IEnumerable<string> sparseCheckoutPaths, Action<string>? outputCallback = null)
         {
             return RunCommandAsync(repositoryPath, $"sparse-checkout set {string.Join(" ", sparseCheckoutPaths)} --cone", outputCallback);

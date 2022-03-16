@@ -136,7 +136,8 @@ namespace ItalicPig.Bootstrap.ViewModel
             try
             {
                 await Model.Git.ShowVersionAsync(AddLogOutput);
-                var Result = await _Project.CloneAsync(url, AddLogOutput);
+                await _Project.CloneAsync(url, AddLogOutput);
+                await _Project.InstallLfsAsync(AddLogOutput);
                 Application.Current.Dispatcher.Invoke(Refresh);
             }
             catch (Exception Ex)
@@ -172,7 +173,7 @@ namespace ItalicPig.Bootstrap.ViewModel
             try
             {
                 await Model.Git.ShowVersionAsync(AddLogOutput);
-                var Result = await _Project.ApplyAsync(AddLogOutput);
+                await _Project.ApplyAsync(AddLogOutput);
                 foreach (var View in Views)
                 {
                     View.Dirty = false;

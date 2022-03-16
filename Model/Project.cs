@@ -72,6 +72,11 @@ namespace ItalicPig.Bootstrap.Model
             return Git.CloneAsync(Path, url, outputCallback);
         }
 
+        public Task<CliWrap.CommandResult> InstallLfsAsync(Action<string>? outputCallback = null)
+        {
+            return Git.InstallLfsAsync(Path, outputCallback);
+        }
+
         public Task<CliWrap.CommandResult> ApplyAsync(Action<string>? outputCallback = null)
         {
             if (_SparseCheckoutEnabled)
