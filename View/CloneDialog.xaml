@@ -14,6 +14,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
@@ -32,11 +33,13 @@
             <TextBlock Margin="2,0" VerticalAlignment="Center" Text="{Binding PathSeparator}" />
             <TextBlock VerticalAlignment="Center" Text="{Binding ProjectName}" />
         </StackPanel>
-        
+
+        <TextBlock Grid.Row="2" Grid.ColumnSpan="3" HorizontalAlignment="Center" Text="{Binding ValidationMessage}" Foreground="Red" />
+
         <!-- Buttons -->
-        <StackPanel Grid.Row="2" Grid.ColumnSpan="3" Margin="0,10" Orientation="Horizontal" HorizontalAlignment="Center">
-            <Button Padding="5,2" Content="Clone" Command="{Binding CloneCommand}" CommandParameter="{Binding ElementName=CloneWindow}" />
-            <Button Margin="10,0,0,0" Padding="5,2" Content="Cancel" Click="CancelButton_Click" />
+        <StackPanel Grid.Row="3" Grid.ColumnSpan="3" Margin="0,10" Orientation="Horizontal" HorizontalAlignment="Center">
+            <Button Padding="5,2" Content="Clone" IsDefault="True" Command="{Binding CloneCommand}" CommandParameter="{Binding ElementName=CloneWindow}" />
+            <Button Margin="10,0,0,0" Padding="5,2" Content="Cancel" IsCancel="True" Click="CancelButton_Click" />
         </StackPanel>
     </Grid>
 </Window>

@@ -21,6 +21,7 @@ namespace ItalicPig.Bootstrap.ViewModel
                     OnPropertyChanged();
                     OnPropertyChanged(nameof(ProjectName));
                     OnPropertyChanged(nameof(IsUrlValid));
+                    OnPropertyChanged(nameof(ValidationMessage));
                     ((RelayCommand<Window>)CloneCommand).NotifyCanExecuteChanged();
                 }
             }
@@ -30,7 +31,7 @@ namespace ItalicPig.Bootstrap.ViewModel
 
         public bool IsUrlValid => Uri.TryCreate(_Url, UriKind.Absolute, out _);
 
-        public static string PathSeparator => new string(Path.DirectorySeparatorChar, 1);
+        public static string PathSeparator => Path.DirectorySeparatorChar.ToString();
 
         public string Folder
         {
@@ -41,8 +42,38 @@ namespace ItalicPig.Bootstrap.ViewModel
                 {
                     _Folder = value;
                     OnPropertyChanged();
+                    OnPropertyChanged(nameof(IsFolderValid));
+                    OnPropertyChanged(nameof(ValidationMessage));
                     ((RelayCommand<Window>)CloneCommand).NotifyCanExecuteChanged();
                 }
+            }
+        }
+
+        public bool IsFolderValid => Path.IsPathRooted(_Folder);
+
+        public string ValidationMessage
+        {
+            get
+            {
+                var Name = ProjectName;
+                if (!IsUrlValid || Name == "" || Name == "?")
+                {
+                    return "That URL is invalid.";
+                }
+                if (_ProjectCollection.Projects.Any(p => p.Name == Name))
+                {
+                    return "That project already exists.";
+                }
+                if (!IsFolderValid)
+                {
+                    return "That folder is invalid.";
+                }
+                var FullPath = Path.Combine(_Folder, ProjectName);
+                if (Directory.Exists(FullPath) && Directory.EnumerateFileSystemEntries(FullPath).Any())
+                {
+                    return "That folder already exists and isn't empty.";
+                }
+                return "";
             }
         }
 
@@ -66,7 +97,7 @@ namespace ItalicPig.Bootstrap.ViewModel
         }
 
         #region Private
-        private bool CanClone(Window? cloneWindow) => _Folder != "" && IsUrlValid && ProjectName != "?";
+        private bool CanClone(Window? cloneWindow) => IsUrlValid && IsFolderValid && ProjectName != "" && ProjectName != "?";
 
         private void Clone(Window? cloneWindow)
         {
