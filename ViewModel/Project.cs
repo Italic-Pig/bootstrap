@@ -138,6 +138,7 @@ namespace ItalicPig.Bootstrap.ViewModel
                 await Model.Git.ShowVersionAsync(AddLogOutput);
                 await _Project.CloneAsync(url, AddLogOutput);
                 await _Project.InstallLfsAsync(AddLogOutput);
+                await _Project.SetConfigAsync("core.autocrlf", "false", Model.GitConfigScope.Local, AddLogOutput);
                 Application.Current.Dispatcher.Invoke(Refresh);
             }
             catch (Exception Ex)

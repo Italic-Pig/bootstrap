@@ -12,6 +12,8 @@
     <RepositoryUrl>https://github.com/Italic-Pig/bootstrap</RepositoryUrl>
     <PackageId>ItalicPig.$(AssemblyName)</PackageId>
     <RootNamespace>ItalicPig.$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
+    <AssemblyVersion></AssemblyVersion>
+    <Version>1.0.1$(VersionPrefix)</Version>
   </PropertyGroup>
 
   <ItemGroup>

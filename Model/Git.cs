@@ -74,6 +74,11 @@ namespace ItalicPig.Bootstrap.Model
             return RunCommandAsync(repositoryPath, "lfs install", outputCallback);
         }
 
+        public static Task<CommandResult> SetConfigAsync(string repositoryPath, string setting, string value, GitConfigScope scope = GitConfigScope.Local, Action<string>? outputCallback = null)
+        {
+            return RunCommandAsync(repositoryPath, $"config --{scope.ToString().ToLowerInvariant()} {setting} {value}", outputCallback);
+        }
+
         public static Task<CommandResult> EnableSparseCheckoutAsync(string repositoryPath, IEnumerable<string> sparseCheckoutPaths, Action<string>? outputCallback = null)
         {
             return RunCommandAsync(repositoryPath, $"sparse-checkout set {string.Join(" ", sparseCheckoutPaths)} --cone", outputCallback);
