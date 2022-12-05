@@ -11,6 +11,10 @@
         <vm:ProjectCollection />
     </Window.DataContext>
 
+    <Window.TaskbarItemInfo>
+        <TaskbarItemInfo ProgressState="{Binding TaskbarProgressState}"/>
+    </Window.TaskbarItemInfo>
+
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibility" />
 

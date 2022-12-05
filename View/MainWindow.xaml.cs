@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Linq;
 using System.Windows;
 using ItalicPig.Bootstrap.ViewModel;
 
@@ -21,6 +22,14 @@ namespace ItalicPig.Bootstrap.View
         protected override void OnClosing(CancelEventArgs e)
         {
             base.OnClosing(e);
+            if (((ProjectCollection)DataContext).Projects.Any(project => project.IsBusy))
+            {
+                if (MessageBox.Show("Are you sure you want to quit while Git is busy? This can cause repository corruption.", "Quit", MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.No) == MessageBoxResult.No)
+                {
+                    e.Cancel = true;
+                    return;
+                }
+            }
             SavePlacement();
         }
 

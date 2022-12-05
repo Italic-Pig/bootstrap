@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows.Input;
+using System.Windows.Shell;
 using System.Xml.Serialization;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -28,6 +29,8 @@ namespace ItalicPig.Bootstrap.ViewModel
                 }
             }
         }
+
+        public TaskbarItemProgressState TaskbarProgressState => Projects.Any(project => project.IsBusy) ? TaskbarItemProgressState.Indeterminate : TaskbarItemProgressState.None;
 
         public ICommand RefreshCommand { get; }
 
@@ -88,10 +91,19 @@ namespace ItalicPig.Bootstrap.ViewModel
                 OnPropertyChanged(nameof(ShowProjects));
             }
 
-            SelectedProject = Projects.FirstOrDefault(p => p.Path == LastSelectedProject);
-            if (SelectedProject == null)
+            SelectedProject = Projects.FirstOrDefault(p => p.Path == LastSelectedProject) ?? Projects.FirstOrDefault();
+
+            foreach (var Project in Projects)
             {
-                SelectedProject = Projects.FirstOrDefault();
+                Project.PropertyChanged += ProjectPropertyChanged;
+            }
+        }
+
+        private void ProjectPropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(Project.IsBusy))
+            {
+                OnPropertyChanged(nameof(TaskbarProgressState));
             }
         }
 
