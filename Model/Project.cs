@@ -86,7 +86,7 @@ namespace ItalicPig.Bootstrap.Model
         {
             if (_SparseCheckoutEnabled)
             {
-                return Git.EnableSparseCheckoutAsync(Path, SparseCheckoutPaths.Select(MakeBarePath), outputCallback);
+                return Git.EnableSparseCheckoutAsync(Path, SparseCheckoutPaths.Select(p => '\"' + MakeBarePath(p) + '\"'), outputCallback);
             }
             else
             {
